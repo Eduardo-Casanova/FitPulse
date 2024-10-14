@@ -4,6 +4,12 @@ import dotenv from 'dotenv';
 import helmet from 'helmet';
 import cors from 'cors';
 import fs from 'fs'; // Para leer y escribir el archivo JSON
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+import path from 'path'; // Asegúrate de importar el módulo 'path'
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 // Importar rutas
 import idRoutes from './routes/id.js';
@@ -32,6 +38,19 @@ app.use(helmet());
 
 // Middleware para manejo de CORS
 app.use(cors());
+
+// Middleware para servir archivos estáticos
+app.use(express.static(path.join(__dirname, 'public'))); // Servir archivos estáticos desde la carpeta "public"
+
+// Ruta GET para redirigir a index.html
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
+// Ruta GET para redirigir a dashboard.html
+app.get('/dashboard', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'dashboard.html'));
+});
 
 // Middleware de rutas específicas para /api/usuarios
 app.use('/api/usuarios', (req, res, next) => {
