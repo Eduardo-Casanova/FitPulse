@@ -8,9 +8,6 @@ import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import path from 'path'; // Asegúrate de importar el módulo 'path'
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
 // Importar rutas
 import idRoutes from './routes/id.js';
 import generoRoutes from './routes/genero.js';
@@ -18,6 +15,9 @@ import invitadoRoutes from './routes/invitado.js';
 import premiumRoutes from './routes/premium.js';
 import usersRoutes from './routes/users.js'; // Importar rutas de usuarios
 import { verificarToken } from './middlewares/auth.js'; // Importar middleware de verificación de token
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 dotenv.config();
 
@@ -69,7 +69,7 @@ app.post('/api/login', (req, res) => {
   const { email, password } = req.body;
 
   // Simulación de verificación de credenciales
-  if (email === 'Eduardocasanova190@gmail.com' && password === '050827Delmy') {
+  if (email === 'Eduardocasanova190@gmail.com' && password === '123') {
     const payload = { email };
     const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });
     res.json({ token });

@@ -107,7 +107,7 @@
                     <option value="false">No</option>
                 </select>
             </div>
-            <button onclick="addUser()">Agregar Usuario</button>
+            <button id="addUserBtn">Agregar Usuario</button>
         </div>
 
         <!-- Sección para actualizar usuario -->
@@ -156,7 +156,7 @@
                     <option value="false">No</option>
                 </select>
             </div>
-            <button onclick="updateUser()">Actualizar Usuario</button>
+            <button id="updateUserBtn">Actualizar Usuario</button>
         </div>
 
         <!-- Sección para eliminar usuario -->
@@ -166,104 +166,12 @@
                 <label for="deleteUserId">ID del Usuario a Eliminar:</label>
                 <input type="text" id="deleteUserId" placeholder="ID del usuario" required>
             </div>
-            <button onclick="deleteUser()">Eliminar Usuario</button>
+            <button id="deleteUserBtn">Eliminar Usuario</button>
         </div>
 
         <div class="result" id="result"></div>
     </div>
 
-    <script>
-        // URL base de la API
-        const apiUrl = 'http://localhost:5001/api';
-
-        // Función para agregar usuario
-        function addUser() {
-            const nombre = document.getElementById('addName').value;
-            const correo = document.getElementById('addEmail').value;
-            const peso = document.getElementById('addWeight').value;
-            const altura = document.getElementById('addHeight').value;
-            const genero = document.getElementById('addGender').value;
-            const invitado = document.getElementById('addGuest').value === 'true';
-            const premium = document.getElementById('addPremium').value === 'true';
-
-            fetch(`${apiUrl}/usuarios`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ nombre, correo, peso, altura, genero, invitado, premium })
-            })
-            .then(response => response.json())
-            .then(data => {
-                showResult('Usuario agregado exitosamente.', false);
-                clearInputFields(['addName', 'addEmail', 'addWeight', 'addHeight', 'addGender', 'addGuest', 'addPremium']);
-            })
-            .catch(error => {
-                showResult('Error al agregar usuario: ' + error, true);
-            });
-        }
-
-        // Función para actualizar usuario
-        function updateUser() {
-            const userId = document.getElementById('updateUserId').value;
-            const nombre = document.getElementById('updateName').value;
-            const correo = document.getElementById('updateEmail').value;
-            const peso = document.getElementById('updateWeight').value;
-            const altura = document.getElementById('updateHeight').value;
-            const genero = document.getElementById('updateGender').value;
-            const invitado = document.getElementById('updateGuest').value === 'true';
-            const premium = document.getElementById('updatePremium').value === 'true';
-
-            fetch(`${apiUrl}/usuarios/${userId}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ nombre, correo, peso, altura, genero, invitado, premium })
-            })
-            .then(response => response.json())
-            .then(data => {
-                showResult('Usuario actualizado exitosamente.', false);
-                clearInputFields(['updateUserId', 'updateName', 'updateEmail', 'updateWeight', 'updateHeight', 'updateGender', 'updateGuest', 'updatePremium']);
-            })
-            .catch(error => {
-                showResult('Error al actualizar usuario: ' + error, true);
-            });
-        }
-
-        // Función para eliminar usuario
-        function deleteUser() {
-            const userId = document.getElementById('deleteUserId').value;
-
-            fetch(`${apiUrl}/usuarios/${userId}`, {
-                method: 'DELETE',
-            })
-            .then(response => {
-                if (response.ok) {
-                    showResult('Usuario eliminado exitosamente.', false);
-                    document.getElementById('deleteUserId').value = '';
-                } else {
-                    showResult('Usuario Eliminado.', true);
-                }
-            })
-            .catch(error => {
-                showResult('Usuario Eliminado: ' + error, true);
-            });
-        }
-
-        // Función para mostrar resultados
-        function showResult(message, isError) {
-            const resultDiv = document.getElementById('result');
-            resultDiv.textContent = message;
-            resultDiv.className = isError ? 'error' : 'success';
-        }
-
-        // Función para limpiar campos de entrada
-        function clearInputFields(fields) {
-            fields.forEach(fieldId => {
-                document.getElementById(fieldId).value = '';
-            });
-        }
-    </script>
+    <script src="dashboard.js"></script>
 </body>
 </html>

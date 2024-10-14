@@ -33,17 +33,9 @@ const writeUsersToFile = (users) => {
 const addUser = (req, res) => {
     const newUser = req.body;
 
-    // Validar que los campos requeridos están presentes y que peso y altura son números
-    if (!newUser.nombre || !newUser.correo || 
-        !newUser.peso || !newUser.altura || !newUser.genero) {
+    // Validar que los campos requeridos están presentes
+    if (!newUser.nombre || !newUser.correo || !newUser.peso || !newUser.altura || !newUser.genero) {
         return res.status(400).json({ message: 'Faltan campos requeridos' });
-    }
-
-    const peso = parseFloat(newUser.peso);
-    const altura = parseFloat(newUser.altura);
-
-    if (isNaN(peso) || isNaN(altura)) {
-        return res.status(400).json({ message: 'El peso y la altura deben ser números válidos' });
     }
 
     // Leer usuarios existentes
@@ -59,7 +51,7 @@ const addUser = (req, res) => {
     const newID = users.length > 0 ? users[users.length - 1].ID + 1 : 1;
 
     // Formatear altura a dos decimales
-    const formattedAltura = altura.toFixed(2);
+    const formattedAltura = parseFloat(newUser.altura).toFixed(2);
 
     // Reordenar el objeto para que el ID esté primero
     const userWithIdFirst = { ID: newID, ...newUser, altura: formattedAltura };
