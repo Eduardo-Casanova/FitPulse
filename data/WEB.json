@@ -1051,12 +1051,12 @@
   },
   {
     "ID": 106,
-    "nombre": "Carlos Martínez",
-    "correo": "carlos.martinez@example.com",
-    "peso": 70,
+    "nombre": "Elias",
+    "correo": "elias@gmail.com",
+    "peso": 80,
     "altura": "1.75",
     "genero": "Masculino",
-    "premium": "no",
-    "invitado": "sí"
+    "premium": "si",
+    "invitado": "no"
   }
 ]

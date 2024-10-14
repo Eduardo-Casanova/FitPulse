@@ -69,12 +69,6 @@
         </div>
         <button onclick="login()">Login</button>
 
-        <div class="form-group">
-            <label for="protectedRoute">Ruta protegida:</label>
-            <input type="text" id="protectedRoute" placeholder="/api/usuarios" required>
-        </div>
-        <button onclick="accessProtected()">Acceder a ruta protegida</button>
-
         <div class="result" id="result"></div>
     </div>
 
@@ -102,8 +96,16 @@
             .then(data => {
                 if (data.token) {
                     token = data.token;
-                    showResult('Token generado: ' + token, false);
+                    showResult('Inicio de sesión exitoso. Redirigiendo...', false);
                     clearInputFields();
+
+                    // Guardar el token en localStorage
+                    localStorage.setItem('jwtToken', token);
+
+                    // Redirigir a dashboard.html
+                    setTimeout(() => {
+                        window.location.href = 'dashboard.html';
+                    }, 1500); // Redirige después de 1.5 segundos
                 } else {
                     showResult('Error: ' + (data.error || 'Error desconocido'), true);
                 }
@@ -116,24 +118,6 @@
         function validateEmail(email) {
             const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             return re.test(email);
-        }
-
-        function accessProtected() {
-            const protectedRoute = document.getElementById('protectedRoute').value;
-
-            fetch(`http://localhost:5001${protectedRoute}`, {
-                method: 'GET',
-                headers: {
-                    'Authorization': token ? `Bearer ${token}` : ''
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                showResult('Respuesta de la ruta protegida: ' + JSON.stringify(data, null, 2), false);
-            })
-            .catch(error => {
-                showResult('Error: ' + error, true);
-            });
         }
 
         function showResult(message, isError) {

@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input, select {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+        button {
+            padding: 10px 15px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 10px;
+            background: #e9ecef;
+            border-radius: 5px;
+        }
+        .error {
+            color: red;
+        }
+        .success {
+            color: green;
+        }
+        .section {
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Bienvenido al Dashboard</h2>
+        <p>¡Has iniciado sesión exitosamente!</p>
+        <p>Aquí podrás gestionar los usuarios, modificar o eliminar información.</p>
+
+        <!-- Sección para agregar usuario -->
+        <div class="section">
+            <h3>Agregar Usuario</h3>
+            <div class="form-group">
+                <label for="addName">Nombre:</label>
+                <input type="text" id="addName" placeholder="Nombre" required>
+            </div>
+            <div class="form-group">
+                <label for="addEmail">Correo:</label>
+                <input type="email" id="addEmail" placeholder="Correo" required>
+            </div>
+            <div class="form-group">
+                <label for="addWeight">Peso (kg):</label>
+                <input type="number" id="addWeight" placeholder="Peso en kg" required>
+            </div>
+            <div class="form-group">
+                <label for="addHeight">Altura (cm):</label>
+                <input type="number" id="addHeight" placeholder="Altura en cm" required>
+            </div>
+            <div class="form-group">
+                <label for="addGender">Género:</label>
+                <select id="addGender" required>
+                    <option value="">Seleccionar</option>
+                    <option value="Masculino">Masculino</option>
+                    <option value="Femenino">Femenino</option>
+                    <option value="Otro">Otro</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="addGuest">¿Es invitado?:</label>
+                <select id="addGuest" required>
+                    <option value="true">Sí</option>
+                    <option value="false">No</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="addPremium">¿Es usuario premium?:</label>
+                <select id="addPremium" required>
+                    <option value="true">Sí</option>
+                    <option value="false">No</option>
+                </select>
+            </div>
+            <button onclick="addUser()">Agregar Usuario</button>
+        </div>
+
+        <!-- Sección para actualizar usuario -->
+        <div class="section">
+            <h3>Actualizar Usuario</h3>
+            <div class="form-group">
+                <label for="updateUserId">ID del Usuario:</label>
+                <input type="text" id="updateUserId" placeholder="ID del usuario" required>
+            </div>
+            <div class="form-group">
+                <label for="updateName">Nuevo Nombre:</label>
+                <input type="text" id="updateName" placeholder="Nuevo nombre">
+            </div>
+            <div class="form-group">
+                <label for="updateEmail">Nuevo Correo:</label>
+                <input type="email" id="updateEmail" placeholder="Nuevo correo">
+            </div>
+            <div class="form-group">
+                <label for="updateWeight">Nuevo Peso (kg):</label>
+                <input type="number" id="updateWeight" placeholder="Nuevo peso en kg">
+            </div>
+            <div class="form-group">
+                <label for="updateHeight">Nueva Altura (cm):</label>
+                <input type="number" id="updateHeight" placeholder="Nueva altura en cm">
+            </div>
+            <div class="form-group">
+                <label for="updateGender">Nuevo Género:</label>
+                <select id="updateGender">
+                    <option value="">Seleccionar</option>
+                    <option value="Masculino">Masculino</option>
+                    <option value="Femenino">Femenino</option>
+                    <option value="Otro">Otro</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="updateGuest">¿Es invitado?:</label>
+                <select id="updateGuest">
+                    <option value="true">Sí</option>
+                    <option value="false">No</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="updatePremium">¿Es usuario premium?:</label>
+                <select id="updatePremium">
+                    <option value="true">Sí</option>
+                    <option value="false">No</option>
+                </select>
+            </div>
+            <button onclick="updateUser()">Actualizar Usuario</button>
+        </div>
+
+        <!-- Sección para eliminar usuario -->
+        <div class="section">
+            <h3>Eliminar Usuario</h3>
+            <div class="form-group">
+                <label for="deleteUserId">ID del Usuario a Eliminar:</label>
+                <input type="text" id="deleteUserId" placeholder="ID del usuario" required>
+            </div>
+            <button onclick="deleteUser()">Eliminar Usuario</button>
+        </div>
+
+        <div class="result" id="result"></div>
+    </div>
+
+    <script>
+        // URL base de la API
+        const apiUrl = 'http://localhost:5001/api';
+
+        // Función para agregar usuario
+        function addUser() {
+            const nombre = document.getElementById('addName').value;
+            const correo = document.getElementById('addEmail').value;
+            const peso = document.getElementById('addWeight').value;
+            const altura = document.getElementById('addHeight').value;
+            const genero = document.getElementById('addGender').value;
+            const invitado = document.getElementById('addGuest').value === 'true';
+            const premium = document.getElementById('addPremium').value === 'true';
+
+            fetch(`${apiUrl}/usuarios`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ nombre, correo, peso, altura, genero, invitado, premium })
+            })
+            .then(response => response.json())
+            .then(data => {
+                showResult('Usuario agregado exitosamente.', false);
+                clearInputFields(['addName', 'addEmail', 'addWeight', 'addHeight', 'addGender', 'addGuest', 'addPremium']);
+            })
+            .catch(error => {
+                showResult('Error al agregar usuario: ' + error, true);
+            });
+        }
+
+        // Función para actualizar usuario
+        function updateUser() {
+            const userId = document.getElementById('updateUserId').value;
+            const nombre = document.getElementById('updateName').value;
+            const correo = document.getElementById('updateEmail').value;
+            const peso = document.getElementById('updateWeight').value;
+            const altura = document.getElementById('updateHeight').value;
+            const genero = document.getElementById('updateGender').value;
+            const invitado = document.getElementById('updateGuest').value === 'true';
+            const premium = document.getElementById('updatePremium').value === 'true';
+
+            fetch(`${apiUrl}/usuarios/${userId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ nombre, correo, peso, altura, genero, invitado, premium })
+            })
+            .then(response => response.json())
+            .then(data => {
+                showResult('Usuario actualizado exitosamente.', false);
+                clearInputFields(['updateUserId', 'updateName', 'updateEmail', 'updateWeight', 'updateHeight', 'updateGender', 'updateGuest', 'updatePremium']);
+            })
+            .catch(error => {
+                showResult('Error al actualizar usuario: ' + error, true);
+            });
+        }
+
+        // Función para eliminar usuario
+        function deleteUser() {
+            const userId = document.getElementById('deleteUserId').value;
+
+            fetch(`${apiUrl}/usuarios/${userId}`, {
+                method: 'DELETE',
+            })
+            .then(response => {
+                if (response.ok) {
+                    showResult('Usuario eliminado exitosamente.', false);
+                    document.getElementById('deleteUserId').value = '';
+                } else {
+                    showResult('Usuario Eliminado.', true);
+                }
+            })
+            .catch(error => {
+                showResult('Usuario Eliminado: ' + error, true);
+            });
+        }
+
+        // Función para mostrar resultados
+        function showResult(message, isError) {
+            const resultDiv = document.getElementById('result');
+            resultDiv.textContent = message;
+            resultDiv.className = isError ? 'error' : 'success';
+        }
+
+        // Función para limpiar campos de entrada
+        function clearInputFields(fields) {
+            fields.forEach(fieldId => {
+                document.getElementById(fieldId).value = '';
+            });
+        }
+    </script>
+</body>
+</html>
